@@ -2,7 +2,6 @@ package oppgave2;
 
 import java.util.Arrays;
 
-
 public class HamburgerButikk {
     private static void skrivUtHeader(String[] kokker, String[] servitorer, int KAPASITET) {
         System.out.println("I denne simuleringen har vi ");
@@ -13,7 +12,6 @@ public class HamburgerButikk {
     }
 
     public static void main(String[] args) {
-
         final String[] kokker = {"Abdo", "Abdul", "Thomas"};
         final String[] servitorer = {"Oskar", "Erlend"};
         final int KAPASITET = 4;

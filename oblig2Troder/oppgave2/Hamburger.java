@@ -7,10 +7,6 @@ public class Hamburger {
         this.id = id;
     }
 
-    public static int getId() {
-        return id;
-    }
-
     @Override
     public String toString() {
         return "◖" + id + '◗';
