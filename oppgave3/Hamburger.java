@@ -1,4 +1,4 @@
-package oppgave2;
+package oppgave3;
 
 public class Hamburger {
     private final int id;
