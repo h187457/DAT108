@@ -154,6 +154,10 @@ class DeltagerManager {
       })
       .join("");
     }
+
+    
+
+    
 }
 
 const rootelement = document.getElementById("root");
