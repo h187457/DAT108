@@ -1,74 +1,73 @@
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 .grid {
-    display: grid;
-}
-
-input:invalid {
-    border: 2px solid red;
+  display: grid;
 }
 
 input {
-    border: 2px solid lime;
+  border: 2px solid #ccc;
+  padding: 2px 4px;
+}
+
+
+input:invalid {
+  border-color: red;
+}
+
+
+input:valid {
+  border-color: limegreen;
 }
 
 fieldset {
-    margin: 20px 0;
-    padding: 10px;
+  margin: 20px 0;
+  padding: 10px;
 }
 
-.registrering>.input {
-    display: grid;
-    grid-template-columns: repeat(2, max-content);
-    grid-gap: 5px;
+.registrering .input {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  grid-gap: 5px;
 }
 
-.registrering>.input>button {
-    grid-column: 1/span 2;
+.registrering .input > button {
+  grid-column: 1 / span 2;
 }
 
-/*
-.resultat {
-    margin-top: 5em;
-}
-*/
-
-.resultat>div {
-    float: right;
+.resultat > div {
+  float: right;
 }
 
-.resultat>div+div {
-    float: left;
+.resultat > div + div {
+  float: left;
 }
 
-.resultat>.input {
-    display: grid;
-    grid-template-columns: repeat(2, max-content);
-    grid-gap: 5px 15px;
+.resultat .input {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  grid-gap: 5px 15px;
 }
 
-.resultat>.input>button {
-    grid-column: 1/span 2;
+.resultat .input > button {
+  grid-column: 1 / span 2;
 }
 
 table {
-    border-collapse: collapse;
-    empty-cells: show;
+  border-collapse: collapse;
+  empty-cells: show;
 }
 
 th {
-    padding-top: 5px;
+  padding-top: 5px;
 }
 
-td,
-th {
-    padding-left: 1em;
-    text-align: left;
+td, th {
+  padding-left: 1em;
+  text-align: left;
 }
 
-td:first-child,
-th:first-child {
-    padding-left: 0px;
+td:first-child, th:first-child {
+  padding-left: 0;
 }
