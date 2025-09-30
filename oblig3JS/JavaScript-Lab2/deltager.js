@@ -105,6 +105,10 @@ class DeltagerManager {
             this.resultatListe.appendChild(rad);
         });
     }
+
+    
+
+    
 }
 
 // Initialize manager
