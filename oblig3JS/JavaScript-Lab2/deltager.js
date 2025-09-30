@@ -10,67 +10,66 @@ class DeltagerManager {
         this.resultatListe = root.querySelector(".resultat tbody");
         this.msg = root.querySelector(".registrering p");
 
+        this.nedregrense = root.querySelector("#nedregrense");
+        this.ovregrense = root.querySelector("#ovregrense");
+
         this.deltList = [];
 
         this.btnRegistrer.addEventListener("click", () => this.registrerDeltager());
 
-        this.inputStartnummer.addEventListener("input", () => this.validateInput("startnummer"));
-        this.inputNavn.addEventListener("input", () => this.validateInput("deltagernavn"));
-        this.inputSluttid.addEventListener("input", () => this.validateInput("sluttid"));
 
         const btnVis = root.querySelector(".resultat button");
         btnVis.addEventListener("click", () => this.visDeltagere());
     }
 
-    validateInput(inputId) {
-        const inputElement = document.getElementById(inputId);
 
-        if (inputElement.validity.valueMissing) {
-            inputElement.setCustomValidity("Dette feltet må fylles ut.");
-        } else if (inputElement.validity.typeMismatch) {
-            inputElement.setCustomValidity("Vennligst skriv inn en gyldig verdi.");
-        } else if (inputElement.validity.patternMismatch) {
-            inputElement.setCustomValidity("Verdien samsvarer ikke med det forventede mønsteret.");
-        } else if (inputElement.validity.tooLong) {
-            inputElement.setCustomValidity("Verdien er for lang.");
-        } else if (inputElement.validity.tooShort) {
-            inputElement.setCustomValidity("Verdien er for kort.");
-        } else {
-            inputElement.setCustomValidity("");
-        }
-    }
 
     registrerDeltager() {
         const startnummer = this.inputStartnummer.value.trim();
-        const navn = this.inputNavn.value.trim();
+        let navn = this.inputNavn.value;
         const sluttid = this.inputSluttid.value.trim();
+
+        navn = this.#titleCaseName(navn);
+        this.inputNavn.value = navn;
 
         if (!startnummer || !navn || !sluttid) {
             return;
         }
 
-        if (this.deltList.some(d => d.startnummer === startnummer)) {
-            this.inputStartnummer.setCustomValidity("Startnummeret er allerede registrert!");
+        this.inputStartnummer.setCustomValidity("");
+        this.inputNavn.setCustomValidity("");
+        this.inputSluttid.setCustomValidity("");
+        
+        if (!this.inputStartnummer.checkValidity()) {
             this.inputStartnummer.reportValidity();
             this.inputStartnummer.focus();
             return;
-        } else {
-            this.inputStartnummer.setCustomValidity("");
         }
 
-        if (!this.inputStartnummer.checkValidity() ||
-            !this.inputNavn.checkValidity() ||
-            !this.inputSluttid.checkValidity()) {
-            if (!this.inputStartnummer.checkValidity()) {
-                this.inputStartnummer.reportValidity();
-                this.inputStartnummer.focus();
-            } else if (!this.inputNavn.checkValidity()) {
-                this.inputNavn.reportValidity();
-                this.inputNavn.focus();
-            } else {
-                this.inputSluttid.reportValidity();
-                this.inputSluttid.focus();
-            }
+        if (!this.inputNavn.checkValidity()) {
+            this.inputNavn.reportValidity();
+            this.inputNavn.focus();
+            return;
+        }
+
+        if (!this.inputSluttid.checkValidity()) {
+            this.inputSluttid.reportValidity();
+            this.inputSluttid.focus();
+            return;
+        }
+
+        const start = Number(startnummer);
+        if (!Number.isInteger(start) || start < 1) {
+            this.inputStartnummer.setCustomValidity("Startnummer må være et heltall ≥ 1.");
+            this.inputStartnummer.reportValidity();
+            this.inputStartnummer.focus();
+            return;
+        }
+
+        if (this.deltList.some(d => d.startnummer === startnummer)) {
+            this.inputStartnummer.setCustomValidity("Dette startnummeret er allerede registrert.");
+            this.inputStartnummer.reportValidity();
+            this.inputStartnummer.focus();
             return;
         }
 
@@ -90,23 +89,72 @@ class DeltagerManager {
     }
 
     visDeltagere() {
-        const sorted = [...this.deltList].sort((a, b) => a.sluttid.localeCompare(b.sluttid));
+        this.ovregrense.setCustomValidity("");
+        const nedre = this.nedregrense.value.trim();
+        const ovre = this.ovregrense.value.trim();
+
+
+        if (nedre && ovre && nedre > ovre) {
+            this.ovregrense.setCustomValidity("Øvre grense må være større enn nedre");
+            this.ovregrense.reportValidity();
+            this.ovregrense.focus();
+            return;
+        } else {
+            this.ovregrense.setCustomValidity("");
+        }
 
         this.resultatListe.innerHTML = "";
 
-        sorted.forEach((d, i) => {
-            const rad = document.createElement("tr");
-            rad.innerHTML = `
-                <td>${i + 1}</td>
-                <td>${d.startnummer}</td>
-                <td>${d.navn}</td>
-                <td>${d.sluttid}</td>
+
+        if(this.nedregrense==null && this.ovregrense==null){
+
+            const sorted = [...this.deltList].sort((a, b) => a.sluttid.localeCompare(b.sluttid));
+            sorted.forEach((d, i) => {
+                const rad = document.createElement("tr");
+                rad.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${d.startnummer}</td>
+                    <td>${d.navn}</td>
+                    <td>${d.sluttid}</td>
             `;
             this.resultatListe.appendChild(rad);
         });
+        } else {
+
+
+            const filtered = this.deltList.filter(d => {
+                 return (!nedre || d.sluttid >= nedre) && (!ovre || d.sluttid <= ovre);
+            });
+
+            const sorted = filtered.sort((a, b) => a.sluttid.localeCompare(b.sluttid));
+
+            sorted.forEach((d, i) => {
+                const rad = document.createElement("tr");
+                rad.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${d.startnummer}</td>
+                    <td>${d.navn}</td>
+                    <td>${d.sluttid}</td>
+            `;
+            this.resultatListe.appendChild(rad);
+        });
+        }
+    }
+
+    #titleCaseName(str) {
+    return str
+      .trim()
+      .replace(/\s+/g, " ")
+      .split(/([ -])/g)
+      .map(part => {
+        if (part === " " || part === "-") return part;
+        if (!part) return part;
+        return part.charAt(0).toLocaleUpperCase("nb-NO")
+             + part.slice(1).toLocaleLowerCase("nb-NO");
+      })
+      .join("");
     }
 }
 
-// Initialize manager
 const rootelement = document.getElementById("root");
 new DeltagerManager(rootelement);
