@@ -13,6 +13,8 @@ class DeltagerManager {
         this.nedregrense = root.querySelector("#nedregrense");
         this.ovregrense = root.querySelector("#ovregrense");
 
+        this.ingenResultat = root.querySelector(".no-results");
+
         this.deltList = [];
 
         this.btnRegistrer.addEventListener("click", () => this.registrerDeltager());
@@ -92,12 +94,21 @@ class DeltagerManager {
         this.ovregrense.setCustomValidity("");
         const nedre = this.nedregrense.value.trim();
         const ovre = this.ovregrense.value.trim();
+        const noResultsText = this.ingenResultat;
+        const tbody = this.resultatListe;
+
+
+
+
+
 
 
         if (nedre && ovre && nedre > ovre) {
             this.ovregrense.setCustomValidity("Øvre grense må være større enn nedre");
             this.ovregrense.focus();
             this.ovregrense.reportValidity();
+
+
             return;
         } else {
             this.ovregrense.setCustomValidity("");
@@ -139,6 +150,13 @@ class DeltagerManager {
             this.resultatListe.appendChild(rad);
         });
         }
+
+
+        if (tbody.children.length > 0) {
+            noResultsText.style.display = 'none';
+        } else {
+            noResultsText.style.display = 'block';
+            }
     }
 
     #titleCaseName(str) {
