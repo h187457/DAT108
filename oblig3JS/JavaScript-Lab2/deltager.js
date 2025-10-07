@@ -41,35 +41,35 @@ class DeltagerManager {
         this.inputSluttid.setCustomValidity("");
         
         if (!this.inputStartnummer.checkValidity()) {
-            this.inputStartnummer.reportValidity();
             this.inputStartnummer.focus();
+            this.inputStartnummer.reportValidity();
             return;
         }
 
         if (!this.inputNavn.checkValidity()) {
-            this.inputNavn.reportValidity();
             this.inputNavn.focus();
+            this.inputNavn.reportValidity();
             return;
         }
 
         if (!this.inputSluttid.checkValidity()) {
-            this.inputSluttid.reportValidity();
             this.inputSluttid.focus();
+            this.inputSluttid.reportValidity();
             return;
         }
 
         const start = Number(startnummer);
         if (!Number.isInteger(start) || start < 1) {
             this.inputStartnummer.setCustomValidity("Startnummer må være et heltall ≥ 1.");
-            this.inputStartnummer.reportValidity();
             this.inputStartnummer.focus();
+            this.inputStartnummer.reportValidity();
             return;
         }
 
         if (this.deltList.some(d => d.startnummer === startnummer)) {
             this.inputStartnummer.setCustomValidity("Dette startnummeret er allerede registrert.");
-            this.inputStartnummer.reportValidity();
             this.inputStartnummer.focus();
+            this.inputStartnummer.reportValidity();
             return;
         }
 
@@ -96,8 +96,8 @@ class DeltagerManager {
 
         if (nedre && ovre && nedre > ovre) {
             this.ovregrense.setCustomValidity("Øvre grense må være større enn nedre");
-            this.ovregrense.reportValidity();
             this.ovregrense.focus();
+            this.ovregrense.reportValidity();
             return;
         } else {
             this.ovregrense.setCustomValidity("");
